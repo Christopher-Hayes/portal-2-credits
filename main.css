@@ -1,0 +1,206 @@
+/* background defeaults to transparent b/c mystery box radnomly flashes on screen in 
+    random positions, this appears to patch the bug for now */
+* { margin: 0; padding: 0; background-color: rgba( 0, 0, 0, 0 ); }
+body {
+    height: calc( 100vh - 104px );
+    width: calc( 100vw - 104px );
+    padding: 50px;
+}
+.content {
+    width: 100%;
+    height: 100%;
+    border-top: none !important;
+}
+.background {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#754d1a+0,442e19+100 */
+    background: rgb(117,77,26); /* Old browsers */
+    background: -moz-radial-gradient(center, ellipse cover, rgba(117,77,26,1) 0%, rgba(68,46,25,1) 100%); /* FF3.6-15 */
+    background: -webkit-radial-gradient(center, ellipse cover, rgba(117,77,26,1) 0%,rgba(68,46,25,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: radial-gradient(ellipse at center, rgba(117,77,26,1) 0%,rgba(68,46,25,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#754d1a', endColorstr='#442e19',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    background-size: 100vw 100vh;
+    background-position: 0px 0px;
+    background-attachment: fixed;
+}
+.border {
+    border: 3px solid rgba(180, 134, 49, 0.3);
+}
+.border-top {
+    border-top: 3px solid rgba(180, 134, 49, 0.3);
+}
+.pattern {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    opacity: 0.03;
+    background-image: url("img/bkrnd_pattern2.png");
+}
+.shift {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-image: url( "img/shift2.png" );
+    background-repeat: repeat-x;
+    background-position: 0 50%;
+    background-size: 10px 600px;
+    animation: shiftAnim;
+    animation-duration: 6s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+@keyframes shiftAnim {
+    0% {    background-position: 0 -600px; }
+    64% {   background-position: 0 -600px; }
+    100% {  background-position: 0 100vh; }
+}
+/* aperature science logo */
+.logo {
+    position: absolute;
+    right: 80px;
+    top: 40px;
+    width: 146px;
+    height: 146px;
+}
+.logo img {
+    width: 80%;
+    height: 80%;
+    margin: 10%;
+    opacity: 0.4;
+}
+/* number design */
+.nums {
+    position: absolute;
+    width: 68px;
+    height: 141px;
+    top: 40px;
+    right: 244px;
+    padding-top: 5px;
+    color: rgba(162, 130, 72, 0.62);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.6em;
+    line-height: 30px;
+    text-align: center;
+}
+/* bars design */
+.bars {
+    position: absolute;
+    width: 281px;
+    height: 146px;
+    top: 40px;
+    right: 330px;
+}
+.bars1 {
+    width: 45%;
+    height: 100%;
+    opacity: 0.3;
+    float: left;
+    margin-left: 3%;
+    background: url( "img/bars.png" );
+    background-size: 50% 150%;
+    animation: barsAnim;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-direction: reverse;
+}
+.bars2 {
+    display: inline-block;
+    width: 45%;
+    height: 100%;
+    opacity: 0.3;
+    margin-left: 5%;
+    background: url( "img/bars.png" );
+    background-size: 50% 150%;
+    animation: barsAnim;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+@keyframes barsAnim {
+    from { background-position: 0% 0%; }
+    to { background-position: 0% 300%; }
+}
+.b1, .b2, .b3, .b4 {
+    position: absolute;
+    top: 50px;
+    height: 3px;
+}
+.b1 {
+    left: 53px;
+    width: calc( 100% - 670px );
+}
+.b2 {
+    right: 318px;
+    width: 12px;
+}
+.b3 {
+    right: 232px;
+    width: 12px;
+}
+.b4 {
+    right: 51px;
+    width: 29px;
+}
+.lyrics {
+    padding: 5vw 0 0 5vw;
+    width: 50%;
+    height: calc( 100% - 10vw );
+    font-family: 'Roboto Mono', monospace;
+    color: rgba(162, 130, 72, 0.62);
+    font-size: 1.5em;
+    line-height: 40px;
+    float: left;
+}
+.printChar {
+    animation: animAppear;
+    animation-duration: 100ms;
+    animation-iteration-count: 1;
+    animation-play-state: paused;
+}
+@keyframes animAppear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.cursor {
+    animation: animBlink;
+    animation-duration: 1000ms;
+    animation-iteration-count: infinite;
+    opacity: 0;
+    display: inline-block;
+}
+@keyframes animBlink {
+    0% { opacity: 0; }
+    27% { opacity: 1; }
+    54% { opacity: 1; }
+    81% { opacity: 0; }
+}
+.break {
+    display: block;
+    content: "";
+    height: 30px;
+}
+.credits-wrap {
+    position: absolute;
+    right: 90px;
+    bottom: 120px;
+    width: 40%;
+    padding-top: 16vh;
+    overflow: hidden;
+}
+.credits {
+    position: absolute;
+    display: table-cell;
+    width: 100%;
+    bottom: 0;
+    right: 0;
+    text-align: right;
+    vertical-align: bottom;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.4em;
+    line-height: 30px;
+    color: rgb(54, 31, 10);
+}
