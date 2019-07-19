@@ -1,24 +1,71 @@
 var lyrics, cursor, credits;
 var start;
+// Scan animation
+var scanY = 0;
+var c, ctx;
+var interval = 4;
+var delay = 0;
+var ready = false;
+
 window.onload = function( e ) {
-    lyrics = document.getElementById( "lyrics" );
-    credits = document.getElementById( "credits" );
-    // trying to get text to cutoff perfectly on different screens; works okay-ish
-    var height = 470 * ( window.innerHeight / 970 );
-    height -= height % 47;
-    height -= height < 400 ? 47 : 0;
-    document.getElementById( "credits-wrap" ).style.height = ( height ).toString() + "px";
-    initCursor();
-    var audio = document.getElementById( "music" );
-    audio.addEventListener( 'canplaythrough', start, false );
-    if (audio.readyState > 3)
-        start();
+  // Scan animation init
+  c = document.getElementById("crt");
+  c.width = window.innerWidth;
+  c.height = window.innerHeight*2;
+  ctx = c.getContext("2d");
+  paintScreen();
+  
+  lyrics = document.getElementById( "lyrics" );
+  credits = document.getElementById( "credits" );
+  // trying to get text to cutoff perfectly on different screens; works okay-ish
+  var height = 470 * ( window.innerHeight / 970 );
+  height -= height % 47;
+  height -= height < 400 ? 47 : 0;
+  document.getElementById( "credits-wrap" ).style.height = ( height ).toString() + "px";
+  var audio = document.getElementById( "music" );
+  audio.addEventListener( 'canplaythrough', start, false );
+  if (audio.readyState > 3) {
+    console.log('Audio ready to play');
+    ready = true;
+    document.getElementById('overlay-button').innerText = 'Play';
+    document.body.classList.add('ready');
+  }
 }
+
+function playClick() {
+  console.log('Play clicked');
+  if (ready) {
+    document.body.classList.add('play');
+    startPlaying();
+    ready = false;
+  }
+}
+
+function paintScreen() {
+  // Fill with gradient
+  ctx.clearRect(0, 0, c.width, c.height);
+  for (var y = 0; y < c.height; y += 5) {
+    var opacity = y > scanY ? (c.height - (c.height - y + scanY)) / c.height : (c.height - (scanY*2 - y)) / c.height;
+    opacity *= 0.9 + Math.random() * 0.2;
+    for (var x = 0; x < 1; x++) {
+        var grd = ctx.createLinearGradient(x+6, y+1, x+6, y+4);
+        grd.addColorStop(0, "rgba(235,115,15,0)");
+        grd.addColorStop(1, "rgba(235,115,15," + (opacity * 0.05).toString() + ")");
+        ctx.fillStyle = grd;
+        ctx.fillRect(x, y, c.width, 5);
+    }
+  }
+  scanY = (scanY + 4) % (2*c.height);
+  setTimeout(paintScreen, scanY == c.height - 1 ? delay : interval);
+}
+
 // start when music is loaded
-function start() {
-    document.getElementById( "music" ).play();
-    initLyrics();
-    initCredits();
+function startPlaying() {
+  console.log('Start playing..');
+  initCursor();
+  document.getElementById( "music" ).play();
+  initLyrics();
+  initCredits();
 }
 /* LYRICS */
 var lyricsIndex = 0;

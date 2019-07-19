@@ -2,9 +2,6 @@
     random positions, this appears to patch the bug for now */
 * { margin: 0; padding: 0; background-color: rgba( 0, 0, 0, 0 ); }
 body {
-    height: calc( 100vh - 104px );
-    width: calc( 100vw - 104px );
-    padding: 50px;
 }
 .content {
     width: 100%;
@@ -102,7 +99,7 @@ body {
     background: url( "img/bars.png" );
     background-size: 50% 150%;
     animation: barsAnim;
-    animation-duration: 3s;
+    animation-duration: 2500ms;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     animation-direction: reverse;
@@ -116,7 +113,7 @@ body {
     background: url( "img/bars.png" );
     background-size: 50% 150%;
     animation: barsAnim;
-    animation-duration: 3s;
+    animation-duration: 2500ms;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 }
@@ -203,4 +200,43 @@ body {
     font-size: 1.4em;
     line-height: 30px;
     color: rgb(54, 31, 10);
+}
+/* canvas screen scan animation */
+#crt {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+/* overlay */
+#overlay {
+  height: calc( 100vh - 100px );
+  width: calc( 100vw - 100px );
+  padding: 50px;
+  overflow: hidden;
+  box-shadow: inset 0 0 50vh black;
+}
+.overlay #overlay {
+  filter: blur(4px);
+  transition: filter 500ms;
+}
+.overlay.play #overlay {
+  filter: blur(0px);
+}
+.overlay .overlay-button {
+  pointer-events: auto;
+  position: absolute;
+  width: 100px;
+  height: 40px;
+  left: calc(50% - 50px);
+  top: calc(50% - 20px);
+  background-color: orange;
+  border: 2px solid darkorange;
+  color: white;
+  pointer-events: none;
+}
+.overlay.ready .overlay-button {
+  pointer-events: auto;
+}
+.overlay.play .overlay-button {
+  display: none;
 }
