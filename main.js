@@ -24,11 +24,19 @@ window.onload = function( e ) {
   document.getElementById( "credits-wrap" ).style.height = ( height ).toString() + "px";
   var audio = document.getElementById( "music" );
   audio.addEventListener( 'canplaythrough', start, false );
+  checkLoad(audio);
+}
+
+function checkLoad(audio) {
+  console.log('Check if audio ready');
   if (audio.readyState > 3) {
     console.log('Audio ready to play');
     ready = true;
     document.getElementById('overlay-button').innerText = 'Play';
     document.body.classList.add('ready');
+  } else {
+    console.log('Audio not ready, try again..');
+    setTimeout(() => checkLoad(audio), 100);
   }
 }
 
@@ -70,7 +78,7 @@ function startPlaying() {
 /* LYRICS */
 var lyricsIndex = 0;
 function initLyrics() {
-    start = ( new Date() ).getTime();
+    start = ( new Date() ).getTime() - 200;
     var offset;
     for( var k in text ) {
         offset = ( new Date() ).getTime() - start;
@@ -162,7 +170,7 @@ var text = [
     [ "It's always such a pleasure",             7700,           1700 ],
     [ "Remember when you tried",                10200,           1400 ],
     [ "to kill me twice?",                      11800,           1650 ],
-    [ "Oh, how we laughed and laughed",         15050,           1800 ],
+    [ "Oh, how we laughed and laughed",         14850,           1800 ],
     [ "Except I wasn't laughing",               17500,           1900 ],
     [ "Under the circumstances",                19900,           1700 ],
     [ "I've been shockingly nice",              21900,           2500 ],
@@ -203,7 +211,7 @@ var text = [
     [ "CLEAR",                                 106000,              0 ],
     [ "Go make some new disaster",             107000,           3000 ],
     [ "That's what I'm counting on",           112000,           3300 ],
-    [ "You're someone else's problem",         115700,           3100 ],
+    [ "You're someone else's problem",         116000,           3100 ],
     [ "Now I only want you gone",              120000,           3100 ],
     [ "Now I only want you gone",              124500,           3100 ],
     [ "Now I only want you",                   129000,           2000 ],
