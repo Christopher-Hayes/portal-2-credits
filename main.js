@@ -44,11 +44,12 @@ function playClick() {
   console.log('Play clicked');
   if (ready) {
     document.body.classList.add('play');
-    startPlaying();
+    requestPlay();
     ready = false;
   }
 }
 
+// CRT scanning visual animation
 function paintScreen() {
   // Fill with gradient
   ctx.clearRect(0, 0, c.width, c.height);
@@ -67,14 +68,20 @@ function paintScreen() {
   setTimeout(paintScreen, scanY == c.height - 1 ? delay : interval);
 }
 
-// start when music is loaded
-function startPlaying() {
-  console.log('Start playing..');
-  initCursor();
-  document.getElementById( "music" ).play();
-  initLyrics();
-  initCredits();
+// Request play
+function requestPlay() {
+  const audioElem = document.querySelector('#music');
+  const startAnimation = function() {
+    initCursor();
+    initLyrics();
+    initCredits();
+  };
+  audioElem.onplay = startAnimation;
+  // Request audio to start playing
+  audioElem.play();
 }
+
+
 /* LYRICS */
 var lyricsIndex = 0;
 function initLyrics() {
