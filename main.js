@@ -22,15 +22,16 @@ window.onload = function( e ) {
   height -= height % 47;
   height -= height < 400 ? 47 : 0;
   document.getElementById( "credits-wrap" ).style.height = ( height ).toString() + "px";
+
+  // Show play button when audio is ready
   var audio = document.getElementById( "music" );
   audio.addEventListener( 'canplaythrough', start, false );
   checkLoad(audio);
 }
 
 function checkLoad(audio) {
-  console.log('Check if audio ready');
   if (audio.readyState > 3) {
-    console.log('Audio ready to play');
+    // Audio is ready to play
     ready = true;
     document.getElementById('overlay-button').innerText = 'Play';
     document.body.classList.add('ready');
@@ -80,7 +81,6 @@ function requestPlay() {
   // Request audio to start playing
   audioElem.play();
 }
-
 
 /* LYRICS */
 var lyricsIndex = 0;

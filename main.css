@@ -1,4 +1,4 @@
-/* background defeaults to transparent b/c mystery box radnomly flashes on screen in 
+/* background defaults to transparent b/c mystery box randomly flashes on screen in 
     random positions, this appears to patch the bug for now */
 * { margin: 0; padding: 0; background-color: rgba( 0, 0, 0, 0 ); }
 body {
