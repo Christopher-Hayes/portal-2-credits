@@ -1,29 +1,54 @@
+/* font-face import */
+@font-face {
+    font-family: 'VT320';
+    src: url('public/fonts/vt320-firmware-V1.2-normal-1x3.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --text-color: rgba(208, 193, 174, 0.66);
+    --text-color-darker: rgba(157, 132, 101, 0.7);
+    --text-shadow: #e88731ed 0 0 30px, rgba(208, 193, 174, 0.5) 0 0 5px;
+    --border-color: rgba(208, 193, 174, 0.46);
+}
+
 /* background defaults to transparent b/c mystery box randomly flashes on screen in 
-    random positions, this appears to patch the bug for now */
+random positions, this appears to patch the bug for now */
 * { margin: 0; padding: 0; background-color: rgba( 0, 0, 0, 0 ); }
-body {
+html, body {
+    font-family: 'VT320', monospace;
 }
 .content {
     width: 100%;
     height: 100%;
     border-top: none !important;
+
+    @media (max-width: 800px) {
+        height: calc(100vh - 100px);
+    }
 }
 .background {
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#754d1a+0,442e19+100 */
     background: rgb(117,77,26); /* Old browsers */
-    background: -moz-radial-gradient(center, ellipse cover, rgba(117,77,26,1) 0%, rgba(68,46,25,1) 100%); /* FF3.6-15 */
-    background: -webkit-radial-gradient(center, ellipse cover, rgba(117,77,26,1) 0%,rgba(68,46,25,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: radial-gradient(ellipse at center, rgba(117,77,26,1) 0%,rgba(68,46,25,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: radial-gradient(
+        ellipse at center,
+        color(display-p3 0.459 0.302 0.102) 0%,
+        color(display-p3 0.267 0.18 0.098) 100%
+        );
+
+
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#754d1a', endColorstr='#442e19',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
     background-size: 100vw 100vh;
     background-position: 0px 0px;
     background-attachment: fixed;
 }
 .border {
-    border: 3px solid rgba(180, 134, 49, 0.3);
+    border: 3px solid var(--border-color);
 }
 .border-top {
-    border-top: 3px solid rgba(180, 134, 49, 0.3);
+    border-top: 3px solid var(--border-color);
 }
 .pattern {
     position: absolute;
@@ -32,7 +57,8 @@ body {
     top: 0;
     left: 0;
     opacity: 0.03;
-    background-image: url("img/bkrnd_pattern2.png");
+    background-image: url("public/img/bkrnd_pattern2.png");
+    pointer-events: none;
 }
 .shift {
     position: absolute;
@@ -40,7 +66,7 @@ body {
     height: 100vh;
     top: 0;
     left: 0;
-    background-image: url( "img/shift2.png" );
+    background-image: url( "public/img/shift2.png" );
     background-repeat: repeat-x;
     background-position: 0 50%;
     background-size: 10px 600px;
@@ -61,12 +87,27 @@ body {
     top: 40px;
     width: 146px;
     height: 146px;
+    mix-blend-mode: color-dodge;
 }
 .logo img {
     width: 80%;
     height: 80%;
     margin: 10%;
     opacity: 0.4;
+}
+/* bars design */
+.bars {
+    position: absolute;
+    width: 281px;
+    height: 146px;
+    top: 40px;
+    right: 330px;
+    mix-blend-mode: color-dodge;
+    
+    /* Hide bars on smaller screens */
+    @media (max-width: 1180px) {
+        display: none;
+    }
 }
 /* number design */
 .nums {
@@ -76,19 +117,17 @@ body {
     top: 40px;
     right: 244px;
     padding-top: 5px;
-    color: rgba(162, 130, 72, 0.62);
-    font-family: 'Roboto Mono', monospace;
-    font-size: 1.6em;
+    color: var(--text-color);
+    text-shadow: var(--text-shadow);
+    mix-blend-mode: color-dodge;
+    font-size: 2rem;
     line-height: 30px;
     text-align: center;
-}
-/* bars design */
-.bars {
-    position: absolute;
-    width: 281px;
-    height: 146px;
-    top: 40px;
-    right: 330px;
+    
+    /* Hide bars on smaller screens */
+    @media (max-width: 900px) {
+        display: none;
+    }
 }
 .bars1 {
     width: 45%;
@@ -96,7 +135,7 @@ body {
     opacity: 0.3;
     float: left;
     margin-left: 3%;
-    background: url( "img/bars.png" );
+    background: url( "public/img/bars.png" );
     background-size: 50% 150%;
     animation: barsAnim;
     animation-duration: 2500ms;
@@ -110,7 +149,7 @@ body {
     height: 100%;
     opacity: 0.3;
     margin-left: 5%;
-    background: url( "img/bars.png" );
+    background: url( "public/img/bars.png" );
     background-size: 50% 150%;
     animation: barsAnim;
     animation-duration: 2500ms;
@@ -125,32 +164,51 @@ body {
     position: absolute;
     top: 50px;
     height: 3px;
+    mix-blend-mode: hard-light;
 }
 .b1 {
     left: 53px;
     width: calc( 100% - 670px );
+    
+    /* extend when on smaller than 1180px */
+    @media (max-width: 1180px) {
+        width: calc( 100% - 383px );
+    }
 }
 .b2 {
     right: 318px;
     width: 12px;
+    
+    /* extend when on smaller than 1180px */
+    @media (max-width: 900px) {
+        right: 244px;
+        width: 86px;
+    }
 }
 .b3 {
     right: 232px;
     width: 12px;
 }
 .b4 {
-    right: 51px;
-    width: 29px;
+    right: 47px;
+    width: 33px;
 }
 .lyrics {
     padding: 5vw 0 0 5vw;
     width: 50%;
     height: calc( 100% - 10vw );
-    font-family: 'Roboto Mono', monospace;
-    color: rgba(162, 130, 72, 0.62);
-    font-size: 1.5em;
-    line-height: 40px;
+    color: var(--text-color);
+    text-shadow: var(--text-shadow);
+    font-size: 2.5rem;
     float: left;
+
+    /* mobile layout */
+    @media (max-width: 800px) {
+        margin-top: 4em;
+        width: 100%;
+        height: 50vh;
+        font-size: 2rem;
+    }
 }
 .printChar {
     animation: animAppear;
@@ -159,7 +217,7 @@ body {
     animation-play-state: paused;
 }
 @keyframes animAppear {
-    0% { opacity: 0; }
+    0% { opacity: 0.4; }
     100% { opacity: 1; }
 }
 .cursor {
@@ -183,60 +241,73 @@ body {
 .credits-wrap {
     position: absolute;
     right: 90px;
-    bottom: 120px;
+    bottom: 90px;
     width: 40%;
-    padding-top: 16vh;
+    height: calc(100% - 280px);
     overflow: hidden;
-}
-.credits {
-    position: absolute;
-    display: table-cell;
-    width: 100%;
-    bottom: 0;
-    right: 0;
-    text-align: right;
-    vertical-align: bottom;
-    font-family: 'Roboto Mono', monospace;
-    font-size: 1.4em;
-    line-height: 30px;
-    color: rgb(54, 31, 10);
+
+    /* mobile layout */
+    @media (max-width: 800px) {
+        right: 70px;
+        bottom: 60px;
+        width: 100%;
+        padding-top: 0;
+        height: 40vh;
+    }
+
+    .credits {
+        position: absolute;
+        display: table-cell;
+        width: 100%;
+        bottom: 0;
+        right: 0;
+        text-align: right;
+        vertical-align: bottom;
+        font-size: 2rem;
+        color: var(--text-color-darker);
+    }
 }
 /* canvas screen scan animation */
 #crt {
-  position: absolute;
-  top: 0;
-  left: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    mix-blend-mode: color-dodge;
+    pointer-events: none;
+    display: none; /* Temp disabled for perf reasons */
 }
 /* overlay */
 #overlay {
-  height: calc( 100vh - 100px );
-  width: calc( 100vw - 100px );
-  padding: 50px;
-  overflow: hidden;
-  box-shadow: inset 0 0 50vh black;
-}
-.overlay #overlay {
-  filter: blur(4px);
-  transition: filter 500ms;
-}
-.overlay.play #overlay {
-  filter: blur(0px);
+    height: calc( 100vh - 100px );
+    width: calc( 100vw - 100px );
+    padding: 50px;
+    overflow: hidden;
+    box-shadow: inset 0 0 50vh black;
+    mix-blend-mode: color-dodge;
 }
 .overlay .overlay-button {
-  pointer-events: auto;
-  position: absolute;
-  width: 100px;
-  height: 40px;
-  left: calc(50% - 50px);
-  top: calc(50% - 20px);
-  background-color: orange;
-  border: 2px solid darkorange;
-  color: white;
-  pointer-events: none;
+    pointer-events: auto;
+    position: absolute;
+    left: calc(50% - 50px);
+    top: calc(50% - 20px);
+    padding: 1rem 2rem;
+    background-color: orange;
+    border: 2px solid darkorange;
+    color: white;
+    pointer-events: none;
+    font-weight: bold;
+    font-family: 'VT320', monospace;
+    font-size: 1.5rem;
+    text-align: center;
+
+    &:hover {
+        background-color: darkorange;
+    }
 }
 .overlay.ready .overlay-button {
-  pointer-events: auto;
+    pointer-events: auto;
+    cursor: pointer;
 }
 .overlay.play .overlay-button {
-  display: none;
+    display: none;
 }

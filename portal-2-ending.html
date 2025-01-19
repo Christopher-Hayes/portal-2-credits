@@ -3,26 +3,30 @@
 <head>
   <meta charset="utf-8">
   <title>Portal 2 Ending</title>
-      <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
   <link rel="stylesheet" href="main.css">
   <script src="main.js"></script>
+  <!-- favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="public/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="public/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="public/img/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="public/img/android-chrome-192x192.png">
 </head>
 <body class="background overlay">
   <div id="overlay">
     <div class="pattern"></div>
     <div class="content border" id="content">
-        <div class="lyrics" id="lyrics"></div>
-        <div class="credits-wrap" id="credits-wrap"><div class="credits" id="credits"></div></div>
+      <div class="lyrics" id="lyrics"></div>
+      <div class="credits-wrap" id="credits-wrap"><div class="credits" id="credits"></div></div>
     </div>
     <div class="logo border">
-        <img src="img/aperature_science_logo.png">
+      <img src="public/img/aperature_science_logo.png">
     </div>
     <div class="nums border">
-        2.67<br>1002<br>45.6
+      2.67<br>1002<br>45.6
     </div>
     <div class="bars border">
-        <div class="bars1"></div>
-        <div class="bars2"></div>
+      <div class="bars1"></div>
+      <div class="bars2"></div>
     </div>
     <div class="b1 border-top"></div>
     <div class="b2 border-top"></div>
@@ -30,11 +34,11 @@
     <div class="b4 border-top"></div>
     <canvas id="crt"></canvas>
   </div>
-
+  
   <!-- overlay to force user gesture to allow audio to play -->
   <button onclick="playClick()" id="overlay-button" class="overlay-button">Loading</button>
-
+  
   <!-- audio -->
-  <audio id="music" src="want_you_gone.m4a"></audio>
+  <audio id="music" src="public/want_you_gone.m4a"></audio>
 </body>
 </html>

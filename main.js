@@ -1,72 +1,72 @@
 var lyrics, cursor, credits;
-var start;
-// Scan animation
-var scanY = 0;
-var c, ctx;
-var interval = 4;
-var delay = 0;
-var ready = false;
+
+const state = {
+    start: -1,
+    currentLineIndex: 0,
+    ready: false,
+    // Scan animation
+    scanimation: {
+        delay: 0,
+        scanY: 0,
+        canvas: null,
+        ctx: null,
+        interval: 4,
+    }
+}
 
 window.onload = function( e ) {
   // Scan animation init
-  c = document.getElementById("crt");
-  c.width = window.innerWidth;
-  c.height = window.innerHeight*2;
-  ctx = c.getContext("2d");
+  state.scanimation.canvas = document.getElementById("crt");
+  state.scanimation.canvas.width = window.innerWidth;
+  state.scanimation.canvas.height = window.innerHeight*2;
+  state.scanimation.ctx = state.scanimation.canvas.getContext("2d");
   paintScreen();
-  
+
   lyrics = document.getElementById( "lyrics" );
   credits = document.getElementById( "credits" );
-  // trying to get text to cutoff perfectly on different screens; works okay-ish
-  var height = 470 * ( window.innerHeight / 970 );
-  height -= height % 47;
-  height -= height < 400 ? 47 : 0;
-  document.getElementById( "credits-wrap" ).style.height = ( height ).toString() + "px";
-
+  
   // Show play button when audio is ready
   var audio = document.getElementById( "music" );
-  audio.addEventListener( 'canplaythrough', start, false );
+  audio.addEventListener( 'canplaythrough', () => checkLoad(audio), false );
   checkLoad(audio);
 }
 
 function checkLoad(audio) {
   if (audio.readyState > 3) {
     // Audio is ready to play
-    ready = true;
+    state.ready = true;
     document.getElementById('overlay-button').innerText = 'Play';
     document.body.classList.add('ready');
   } else {
-    console.log('Audio not ready, try again..');
     setTimeout(() => checkLoad(audio), 100);
   }
 }
 
 function playClick() {
-  console.log('Play clicked');
-  if (ready) {
+  if (state.ready) {
     document.body.classList.add('play');
     requestPlay();
-    ready = false;
+    state.ready = false;
   }
 }
 
 // CRT scanning visual animation
 function paintScreen() {
   // Fill with gradient
-  ctx.clearRect(0, 0, c.width, c.height);
-  for (var y = 0; y < c.height; y += 5) {
-    var opacity = y > scanY ? (c.height - (c.height - y + scanY)) / c.height : (c.height - (scanY*2 - y)) / c.height;
+  state.scanimation.ctx.clearRect(0, 0, state.scanimation.canvas.width, state.scanimation.canvas.height);
+  for (var y = 0; y < state.scanimation.canvas.height; y += 5) {
+    var opacity = y > state.scanimation.scanY ? (state.scanimation.canvas.height - (state.scanimation.canvas.height - y + state.scanimation.scanY)) / state.scanimation.canvas.height : (state.scanimation.canvas.height - (state.scanimation.scanY*2 - y)) / state.scanimation.canvas.height;
     opacity *= 0.9 + Math.random() * 0.2;
     for (var x = 0; x < 1; x++) {
-        var grd = ctx.createLinearGradient(x+6, y+1, x+6, y+4);
+        var grd = state.scanimation.ctx.createLinearGradient(x+6, y+1, x+6, y+4);
         grd.addColorStop(0, "rgba(235,115,15,0)");
         grd.addColorStop(1, "rgba(235,115,15," + (opacity * 0.05).toString() + ")");
-        ctx.fillStyle = grd;
-        ctx.fillRect(x, y, c.width, 5);
+        state.scanimation.ctx.fillStyle = grd;
+        state.scanimation.ctx.fillRect(x, y, state.scanimation.canvas.width, 5);
     }
   }
-  scanY = (scanY + 4) % (2*c.height);
-  setTimeout(paintScreen, scanY == c.height - 1 ? delay : interval);
+  state.scanimation.scanY = (state.scanimation.scanY + 4) % (2*state.scanimation.canvas.height);
+  setTimeout(paintScreen, state.scanimation.scanY == state.scanimation.canvas.height - 1 ? state.scanimation.delay : state.scanimation.interval);
 }
 
 // Request play
@@ -85,16 +85,16 @@ function requestPlay() {
 /* LYRICS */
 var lyricsIndex = 0;
 function initLyrics() {
-    start = ( new Date() ).getTime() - 200;
+    state.start = ( new Date() ).getTime() - 200;
     var offset;
     for( var k in text ) {
-        offset = ( new Date() ).getTime() - start;
+        offset = ( new Date() ).getTime() - state.start;
         printLyric( text[ k ][ 0 ], text[ k ][ 2 ], Math.max( 0, text[ k ][ 1 ] - offset ), k );
     }
 }
-function printLyric( text, duration, delay, index ) {
-    if( delay > 0 ) {
-        setTimeout( function() { printLyric( text, duration, 0, index ); }, delay );
+function printLyric( text, duration, lineDelay, index ) {
+    if( lineDelay > 0 ) {
+        setTimeout( function() { printLyric( text, duration, 0, index ); }, lineDelay );
     }else {
         if( lyricsIndex != index ) {
             setTimeout( function() { printLyric( text, duration, 0, index ); }, 5 );
@@ -134,37 +134,70 @@ function initCursor() {
     cursor.innerHTML = "_";
     lyrics.appendChild( cursor );
 }
+
 /* CREDITS */
-var creditsIndex = 0;
 function initCredits() {
-    var t = 0;
-    for( var k in creditsText ) {
-        var len = creditsText[ k ] == "" ? 50 : 480;
-        printCredits( creditsText[ k ], len - 10, t, k );
-        t += len;
+    var lineIndex = 0;
+
+    for(const lineText in creditsText ) {
+        const len = creditsText[ lineText ] == "" ? 50 : 480;
+        printCreditsLine( creditsText[ lineText ], len - 10, lineIndex, lineText );
+        lineIndex += len;
+    }
+
+    // After the last line of credits, add empty spaces
+    // TODO: not working
+    setTimeout(() => {
+        const maxLines = Math.floor((window.innerHeight - 350) / 38);
+        const newEmptyLinesCount = maxLines - 2;
+
+        for (; lineIndex < creditsText.length + newEmptyLinesCount; lineIndex++) {
+            printCreditsLine( "", 100, (lineIndex - creditsText.length) * 100, lineIndex);
+        }
+    }, lineIndex * 1000 );
+}
+function printCreditsLine( text, duration, lineDelay, index ) {
+    if (lineDelay > 0) {
+        setTimeout( function() { printCreditsLine( text, duration, 0, index ) }, lineDelay );
+    } else {
+        if (state.currentLineIndex != index) {
+            setTimeout( function() { printCreditsLine( text, duration, 0, index ) }, 5 );
+        } else {
+            const isEmptyLine = text == "";
+
+            // Check if we have too many lines
+            let maxLines = Math.floor((window.innerHeight - 350) / 38);
+            // if on small screen, cute maxLines in half
+            if (window.innerWidth < 800) {
+                maxLines = Math.floor(maxLines / 2.2);
+            }
+
+            // Remove the first line if we have too many lines
+            if (state.currentLineIndex > maxLines) {
+                // Remove the first line
+                credits.removeChild(credits.firstChild);
+            }
+
+            // Start writing this line of credits
+            const lineContainer = document.createElement('div');
+            lineContainer.classList.add('line');
+            credits.appendChild(lineContainer);
+
+            loopThroughCredits( text, duration / text.length, lineContainer, isEmptyLine );
+        }
     }
 }
-function printCredits( text, duration, delay, index ) {
-    if( delay > 0 ) {
-        setTimeout( function() { printCredits( text, duration, 0, index ) }, delay );
-    }else {
-        if( creditsIndex != index )
-            setTimeout( function() { printCredits( text, duration, 0, index ) }, 5 );
-        else
-            loopThroughCredits( text, duration / text.length );
-    }
-}
-function loopThroughCredits( textLeft, sleep ) {
+function loopThroughCredits( textLeft, sleep, lineContainer, isEmptyLine) {
     var newChar = document.createElement( "span" );
-    newChar.classList.add( "printChar" );
-    newChar.innerHTML = textLeft.charAt( 0 );
+    // newChar.classList.add( "printChar" ); - Removed for performance reasons
+    newChar.innerHTML = isEmptyLine ? '<br/>' : textLeft.charAt( 0 );
     newChar.style.animationPlayState = "running";
-    credits.append( newChar );
+    lineContainer.append( newChar );
+
     if( textLeft.length > 1 ) {
-        setTimeout( function() { loopThroughCredits( textLeft.substr( 1 ), sleep ) }, sleep );
-    }else {
-        credits.append( document.createElement( "br" ) );
-        creditsIndex++;
+        setTimeout( function() { loopThroughCredits( textLeft.substr( 1 ), sleep, lineContainer, false) }, sleep );
+    } else {
+        state.currentLineIndex++;
     }
 }
 // lyrics
@@ -526,23 +559,5 @@ var creditsText = [
     "",
     "",
     ">PHOTO CREDIT OF EARTH:",
-    "NASA",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
+    "NASA"
 ];
